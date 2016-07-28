@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<info>
+	<id>files_primary_swift</id>
+	<name>SWIFT primary object store</name>
+	<description>SWIFT primary object store</description>
+	<licence>AGPL</licence>
+	<author>ownCloud</author>
+	<version>0.0.1</version>
+	<types>
+		<filesystem/>
+	</types>
+
+	<dependencies>
+		<owncloud min-version="9.2" max-version="9.2"/>
+	</dependencies>
+</info>
