@@ -1,0 +1,6 @@
+{
+    "name": "owncloud/files_primary_swift",
+    "require": {
+    },
+    "license": "OCL"
+}
