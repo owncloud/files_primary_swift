@@ -1,0 +1,54 @@
+workspace:
+  base: /drone
+  path: server/apps/files_primary_swift
+
+branches: [ master ]
+
+pipeline:
+  restore:
+    image: plugins/s3-cache:1
+    pull: true
+    secrets: [ cache_s3_server, cache_s3_access_key, cache_s3_secret_key ]
+    restore: true
+    when:
+      local: false
+
+  install-server:
+    image: owncloudci/core
+    pull: true
+    git_reference: ${CORE_BRANCH}
+
+  phpunit:
+    image: owncloudci/php:${PHP_VERSION}
+    pull: true
+    commands:
+      - bash tests/drone/run.sh
+
+  print-log:
+    image: owncloudci/php:${PHP_VERSION}
+    pull: true
+    commands:
+      - cat /drone/server/data/owncloud.log
+    when:
+      status:  [ failure ]
+
+services:
+  ceph:
+    image: owncloudci/ceph
+    pull: true
+    environment:
+      - KEYSTONE_PUBLIC_PORT=5034
+      - KEYSTONE_ADMIN_USER=test
+      - KEYSTONE_ADMIN_PASS=testing
+      - KEYSTONE_ADMIN_TENANT=testtenant
+      - KEYSTONE_ENDPOINT_REGION=testregion
+      - KEYSTONE_SERVICE=testceph
+      - OSD_SIZE=500
+
+matrix:
+  include:
+    - PHP_VERSION: 7.1
+      CORE_BRANCH: master
+
+    - PHP_VERSION: 7.2
+      CORE_BRANCH: master
